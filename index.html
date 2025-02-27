@@ -52,9 +52,24 @@
         .resultado-container {
             position: relative; /* Para posicionar o ícone de copiar */
         }
+        /* Adicione isso para o efeito de chuva */
+        body {
+            overflow: hidden; /* Impede a barra de rolagem */
+            position: relative; /* Para posicionar as gotas de chuva */
+        }
+        .rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Permite que os cliques passem através da chuva */
+            z-index: -1; /* Coloca a chuva atrás de outros elementos */
+        }
     </style>
 </head>
 <body class="bg-black text-white">
+    <div class="rain"></div> <!-- Contêiner para a chuva -->
     <div class="container mx-auto p-4 bg-black">
         <div class="flex justify-center mb-4">
             <img src="assets/dm.png" alt="Logo Demolay" class="w-32 h-auto mr-4">
@@ -85,6 +100,7 @@
             <pre id="resultado-text" class="text-gray-300"></pre>
         </div>
     </div>
+    <script src="rain.js"></script>
     <script>
         document.querySelector('form').addEventListener('submit', function(event) {
             event.preventDefault(); // Evita o envio padrão do formulário
@@ -114,12 +130,11 @@
                         }
 
                         // Verifica se a data está no formato correto
-                        const dataParts = dataAtividade.split('/');
+                        const dataParts = dataAtividade.split('/'); // Manter a divisão por '/'
                         if (dataParts.length !== 3) {
                             continue; // Ignora se a data estiver inválida
                         }
-
-                        const dataUsuario = new Date(dataParts.reverse().join('-')); // Formato YYYY-MM-DD
+                        const dataUsuario = new Date(dataParts[2], dataParts[1] - 1, dataParts[0]); // Formato YYYY-MM-DD
 
                         // Verifica se a atividade do gabarito está nas atividades do usuário
                         const atividadeEncontrada = atividadesGabarito.find(atividade => 
@@ -131,7 +146,10 @@
                             if (atividadeEncontrada.validacao) {
                                 // Verifica se o mês e o ano da data do usuário estão corretos
                                 const dataLimite = new Date(atividadeEncontrada.data.split('/').reverse().join('-')); // Data do gabarito
-                                if (dataUsuario.getMonth() === dataLimite.getMonth() && dataUsuario.getFullYear() === dataLimite.getFullYear()) {
+                                console.log('Data do usuário:', dataUsuario);
+                                console.log('Data do gabarito:', dataLimite);
+                                console.log('Mês do usuário:', dataUsuario.getMonth(), 'Mês do gabarito:', dataLimite.getMonth());
+                                if (dataUsuario.getFullYear() === dataLimite.getFullYear() && dataUsuario.getMonth() === dataLimite.getMonth()) {
                                     resultado.push(`✔️ ${atividadeEncontrada.nome} (${dataAtividade}) está correta.`);
                                 } else {
                                     resultado.push(`❌ ${atividadeEncontrada.nome} está incorreta. A atividade deve ser realizada no mês ${dataLimite.toLocaleString('pt-BR', { month: 'long' })}.`);
@@ -174,6 +192,7 @@
     </script>
     <footer>
         <p class="brilho">Desenvolvido por: Carlos Barros</p>
+        <p class="brilho">Sistema não oficial ao sisdm, sem nenhum vinculo com a instituição</p>
     </footer>
 </body>
 </html>
