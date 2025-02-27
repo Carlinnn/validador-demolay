@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validador de Atividades Demolay</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilo para o rodapé */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #000000; /* Cor de fundo do rodapé */
+            color: white; /* Cor do texto */
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        @keyframes brilhoAnimado {
+            0% {
+                text-shadow: 
+                    0 0 3px #fff, 
+                    0 0 5px #fff, 
+                    0 0 8px #fff; 
+            }
+            50% {
+                text-shadow: 
+                    0 0 5px #fff, 
+                    0 0 10px #fff, 
+                    0 0 15px #fff; 
+            }
+            100% {
+                text-shadow: 
+                    0 0 3px #fff, 
+                    0 0 5px #fff, 
+                    0 0 8px #fff; 
+            }
+        }
+        .brilho {
+            animation: brilhoAnimado 1.5s infinite; /* Animação de brilho */
+        }
+        .bg-black {
+            background-color: black; /* Fundo preto */
+        }
+        .copy-icon {
+            cursor: pointer;
+            margin-left: 10px;
+            display: inline-flex;
+            align-items: center;
+        }
+        .resultado-container {
+            position: relative; /* Para posicionar o ícone de copiar */
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <div class="container mx-auto p-4 bg-black">
+        <div class="flex justify-center mb-4">
+            <img src="assets/dm.png" alt="Logo Demolay" class="w-32 h-auto mr-4">
+            <img src="assets/gestao.png" alt="Logo Gestão" class="w-32 h-auto">
+        </div>
+        <h1 class="text-3xl font-bold text-center">Validador de Atividades Demolay</h1>
+        <form class="mt-6">
+            <div class="mb-4">
+                <label for="capitulo" class="block text-gray-300">Nome do Capítulo:</label>
+                <input type="text" id="capitulo" class="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded" placeholder="Digite o nome do capítulo">
+            </div>
+            <div class="mb-4">
+                <label for="atividade" class="block text-gray-300">Atividades:</label>
+                <textarea id="atividade" class="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded h-32" placeholder="Digite as atividades"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded">Validar Atividades</button>
+        </form>
+        
+        <!-- Novo campo para exibir os resultados -->
+        <div id="resultado" class="mt-6 p-4 border border-gray-600 bg-gray-800 rounded hidden resultado-container">
+            <h2 class="text-xl font-bold">Resultados da Validação:</h2>
+            <span class="copy-icon" id="copy-button" title="Copiar resultado" style="position: absolute; top: 10px; right: 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 6h12a2 2 0 012 2v12a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 6V4a2 2 0 012-2h8a2 2 0 012 2v2" />
+                </svg>
+            </span>
+            <pre id="resultado-text" class="text-gray-300"></pre>
+        </div>
+    </div>
+    <script>
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita o envio padrão do formulário
+
+            const capitulo = document.getElementById('capitulo').value;
+            const atividadesInput = document.getElementById('atividade').value;
+
+            // Carregar o gabarito
+            fetch('gabarito.json')
+                .then(response => response.json())
+                .then(data => {
+                    const atividadesGabarito = data.atividades;
+                    const atividadesUsuario = atividadesInput.split('\n').map(line => line.trim());
+                    let resultado = [];
+
+                    // Definir a data atual
+                    const dataAtual = new Date();
+
+                    // Processar as atividades em pares (atividade e data)
+                    for (let i = 0; i < atividadesUsuario.length; i += 2) {
+                        const nomeAtividade = atividadesUsuario[i].toLowerCase();
+                        const dataAtividade = atividadesUsuario[i + 1];
+
+                        // Verifica se a data está definida
+                        if (!dataAtividade) {
+                            continue; // Ignora se a data não estiver fornecida
+                        }
+
+                        // Verifica se a data está no formato correto
+                        const dataParts = dataAtividade.split('/');
+                        if (dataParts.length !== 3) {
+                            continue; // Ignora se a data estiver inválida
+                        }
+
+                        const dataUsuario = new Date(dataParts.reverse().join('-')); // Formato YYYY-MM-DD
+
+                        // Verifica se a atividade do gabarito está nas atividades do usuário
+                        const atividadeEncontrada = atividadesGabarito.find(atividade => 
+                            nomeAtividade.includes(atividade.nome.toLowerCase())
+                        );
+
+                        if (atividadeEncontrada) {
+                            // Verifica se a atividade requer validação
+                            if (atividadeEncontrada.validacao) {
+                                // Verifica se o mês e o ano da data do usuário estão corretos
+                                const dataLimite = new Date(atividadeEncontrada.data.split('/').reverse().join('-')); // Data do gabarito
+                                if (dataUsuario.getMonth() === dataLimite.getMonth() && dataUsuario.getFullYear() === dataLimite.getFullYear()) {
+                                    resultado.push(`✔️ ${atividadeEncontrada.nome} (${dataAtividade}) está correta.`);
+                                } else {
+                                    resultado.push(`❌ ${atividadeEncontrada.nome} está incorreta. A atividade deve ser realizada no mês ${dataLimite.toLocaleString('pt-BR', { month: 'long' })}.`);
+                                }
+                            } else {
+                                resultado.push(`✔️ ${atividadeEncontrada.nome} (${dataAtividade}) está correta.`);
+                            }
+                        }
+                    }
+
+                    // Verificar atividades do gabarito que não foram mencionadas
+                    atividadesGabarito.forEach(atividade => {
+                        const atividadeUsuario = atividadesUsuario.some(userAtividade => 
+                            userAtividade.toLowerCase().includes(atividade.nome.toLowerCase())
+                        );
+
+                        if (!atividadeUsuario) {
+                            resultado.push(`❌ ${atividade.nome} não consta na lista de atividades informadas.`);
+                        }
+                    });
+
+                    // Exibir resultado
+                    const resultadoDiv = document.getElementById('resultado');
+                    const resultadoText = document.getElementById('resultado-text');
+                    resultadoText.textContent = `Capítulo: ${capitulo}\n\n` + resultado.join('\n');
+                    resultadoDiv.classList.remove('hidden'); // Mostrar o campo de resultado
+                })
+                .catch(error => console.error('Erro ao carregar o gabarito:', error));
+        });
+
+        // Função para copiar o texto do resultado
+        document.getElementById('copy-button').addEventListener('click', function() {
+            const resultadoText = document.getElementById('resultado-text').textContent;
+            navigator.clipboard.writeText(resultadoText).then(() => {
+                alert('Resultado copiado para a área de transferência!');
+            }).catch(err => {
+                console.error('Erro ao copiar o texto: ', err);
+            });
+        });
+    </script>
+    <footer>
+        <p class="brilho">Desenvolvido por: Carlos Barros</p>
+    </footer>
+</body>
+</html>
