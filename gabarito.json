@@ -3,7 +3,7 @@
         {
             "nome": "COMISSÕES PERMANENTES",
             "data": "28/02/2025",
-            "validacao": false
+            "validacao": true
         },
         {
             "nome": "DIA DEVOCIONAL",
@@ -23,37 +23,37 @@
         {
             "nome": "ARRECADAÇÃO DE FUNDOS",
             "data": "20/06/2025",
-            "validacao": false
+            "validacao": true
         },
         {
             "nome": "Iniciação à Ordem DeMolay",
             "data": "20/06/2025",
-            "validacao": false
+            "validacao": true
         },
         {
             "nome": "INICIAÇÃO AO GRAU DeMOLAY",
             "data": "20/06/2025",
-            "validacao": false
+            "validacao": true
         },
         {
             "nome": "ENTRETENIMENTO",
             "data": "20/06/2025",
-            "validacao": false
+            "validacao": true
         },
         {
             "nome": "TRABALHO SOCIAL",
             "data": "20/06/2025",
-            "validacao": false
+            "validacao": true
         },
         {
             "nome": "TRABALHO COM A MAÇONARIA",
             "data": "20/06/2025",
-            "validacao": false
+            "validacao": true
         },
         {
             "nome": "ANO DeMOLAY",
             "data": "20/06/2025",
-            "validacao": false
+            "validacao": true
         }
     ]
 }
