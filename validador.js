@@ -76,12 +76,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 return `❌ ${atividadeEncontrada.nome} deve ser realizada até 28/02/2025.`;
             }
 
-            // Verificando se a atividade pode ser realizada até 20/06/2025
-            if (dataUsuario <= new Date('2025-06-20')) {
+            // Verificando se a atividade pode ser realizada até 20/12/2025
+            if (dataUsuario <= new Date('2025-12-20')) {
                 return `✔️ ${atividadeEncontrada.nome} (${dataAtividade}) está correta.`;
             }
 
-            return `❌ ${atividadeEncontrada.nome} está incorreta. A atividade deve ser realizada até 20/06/2025.`;
+            return `❌ ${atividadeEncontrada.nome} está incorreta. A atividade deve ser realizada até 20/12/2025.`;
         } else {
             return `✔️ ${atividadeEncontrada.nome} (${dataAtividade}) está correta.`;
         }
