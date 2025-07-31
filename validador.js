@@ -70,10 +70,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Verificando prazos específicos
             if (atividadeEncontrada.nome.toLowerCase() === "comissões permanentes") {
-                if (dataUsuario <= new Date('2025-02-28')) {
+                if (dataUsuario <= new Date('2025-08-30')) {
                     return `✔️ ${atividadeEncontrada.nome} (${dataAtividade}) está correta.`;
                 }
-                return `❌ ${atividadeEncontrada.nome} deve ser realizada até 28/02/2025.`;
+                return `❌ ${atividadeEncontrada.nome} deve ser realizada até 30/08/2025.`;
             }
 
             // Verificando se a atividade pode ser realizada até 20/12/2025
