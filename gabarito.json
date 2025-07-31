@@ -1,6 +1,71 @@
 {
     "atividades": [
         {
+            "nome": "Calendário e Planejamento de Gestão",
+            "data": "31/08/2025",
+            "validacao":true
+        },
+        {
+            "nome": "Comissões Permanentes",
+            "data": "31/08/2025",
+            "validacao":true
+        },
+        {
+            "nome": "Dia dos Pais",
+            "data": "31/08/2025",
+            "validacao":true
+        },
+        {
+            "nome": "Dia do Patriota",
+            "data": "31/09/2025",
+            "validacao":true
+        },
+        {
+            "nome": "Dia Educacional",
+            "data": "31/10/2025",
+            "validacao":true
+        },
+        {
+            "nome": "Dia do Meu Governo",
+            "data": "30/11/2025",
+            "validacao":true
+        },
+        {
+            "nome": "Dia em Memória de Frank Sherman Land",
+            "data": "30/11/2025",
+            "validacao":true
+        },
+        {
+            "nome": "Dia do Conforto",
+            "data": "20/12/2025",
+            "validacao":true
+        },
+        {
+            "nome": "Trabalho Social",
+            "data": "20/12/2025",
+            "validacao":true
+        },
+        {
+            "nome": "Arrecadação de Fundos",
+            "data": "20/12/2025",
+            "validacao":true
+        },
+        {
+            "nome": "Entretenimento",
+            "data": "20/12/2025",
+            "validacao":true
+        },
+        {
+            "nome": "Trabalho em Conjunto com a Maçonaria",
+            "data": "20/12/2025",
+            "validacao":true
+        },
+        {
+            "nome": "Ano DeMolay",
+            "data": "20/12/2025",
+            "validacao":true
+        },
+        {
             "nome": "Iniciação à Ordem DeMolay",
             "data": "20/12/2025",
             "validacao": true
