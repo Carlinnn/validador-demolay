@@ -7,47 +7,48 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./styles.css">
 </head>
-<body class="bg-black text-white">
+<body class="bg-gradient-to-br from-black via-gray-900 to-black text-white min-h-screen flex flex-col justify-between">
     <div class="rain"></div>
-    <div class="container mx-auto p-4 bg-black">
-        <header class="flex justify-center mb-4">
-            <img src="assets/dm.png" alt="Logo Demolay" class="w-32 h-auto mr-4">
-            <img src="assets/gestao.png" alt="Logo Gestão" class="w-32 h-auto">
+
+    <div class="container mx-auto px-4 py-8 relative z-10">
+        <header class="flex justify-center items-center gap-8 mb-8">
+            <img src="assets/dm.png" alt="Logo Demolay" class="w-24 h-auto opacity-90 hover:opacity-100 transition duration-300">
+            <img src="assets/gestao.png" alt="Logo Gestão" class="w-24 h-auto opacity-90 hover:opacity-100 transition duration-300">
         </header>
 
-        <h1 class="text-3xl font-bold text-center">Validador de Atividades Demolay</h1>
+        <h1 class="text-4xl font-extrabold text-center text-blue-400 drop-shadow-lg mb-6">Validador de Atividades CNIE</h1>
 
-        <form id="atividade-form" class="mt-6">
+        <form id="atividade-form" class="bg-gray-900 bg-opacity-80 p-6 rounded-2xl shadow-lg backdrop-blur-md">
             <div class="mb-4">
-                <label for="capitulo" class="block text-gray-300">Nome do Capítulo:</label>
-                <input type="text" id="capitulo" class="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded" placeholder="Digite o nome do capítulo">
+                <label for="capitulo" class="block text-gray-300 font-semibold mb-1">Nome do Capítulo:</label>
+                <input type="text" id="capitulo" class="w-full p-3 border border-gray-700 bg-gray-800 text-white rounded-md focus:ring-2 focus:ring-blue-600 outline-none" placeholder="Digite o nome do capítulo">
             </div>
 
             <div class="mb-4">
-                <label for="atividade" class="block text-gray-300">Atividades:</label>
-                <textarea id="atividade" class="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded h-32" placeholder="Digite as atividades"></textarea>
+                <label for="atividade" class="block text-gray-300 font-semibold mb-1">Atividades:</label>
+                <textarea id="atividade" class="w-full p-3 border border-gray-700 bg-gray-800 text-white rounded-md h-40 resize-none focus:ring-2 focus:ring-blue-600 outline-none" placeholder="Digite as atividades (nome e data em linhas separadas)"></textarea>
             </div>
 
-            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded">Validar Atividades</button>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 transition duration-200 text-white p-3 rounded-md font-semibold tracking-wide">Validar Atividades</button>
         </form>
 
-        <div id="resultado" class="mt-6 p-4 border border-gray-600 bg-gray-800 rounded hidden resultado-container">
-            <h2 class="text-xl font-bold">Resultados da Validação:</h2>
-            <span class="copy-icon" id="copy-button" title="Copiar resultado" style="position: absolute; top: 10px; right: 10px;">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 6h12a2 2 0 012 2v12a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 6V4a2 2 0 012-2h8a2 2 0 012 2v2" />
-                </svg>
-            </span>
-            <pre id="resultado-text" class="text-gray-300"></pre>
+        <div id="resultado" class="mt-8 p-6 bg-gray-800 bg-opacity-90 rounded-2xl shadow-lg hidden relative backdrop-blur-lg resultado-container max-h-96 overflow-y-auto">
+            <h2 class="text-2xl font-bold text-blue-300 mb-3">Resultados da Validação:</h2>
+            <button id="copy-button" title="Copiar resultado" class="absolute top-4 right-4 bg-gray-700 hover:bg-gray-600 text-white p-2 rounded-md shadow-md transition">
+                📋
+            </button>
+            <pre id="resultado-text" class="whitespace-pre-wrap text-gray-200 text-sm"></pre>
         </div>
     </div>
 
-    <footer class="text-center mt-6">
-        <p class="brilho">Desenvolvido por: Carlos Barros & Lucas Steffen</p>
-        <p class="brilho">Sistema não oficial ao sisdm, sem nenhum vínculo com a instituição</p>
-        <p class="brilho">V2.1.5</p>
+    <footer class="bg-gradient-to-r from-blue-700 via-indigo-800 to-blue-700 text-white py-6 mt-10 shadow-inner border-t border-blue-500 backdrop-blur-md">
+        <div class="text-center space-y-1 text-sm tracking-wide">
+            <p class="font-semibold animate-pulse text-white drop-shadow">Desenvolvido por: Carlos Manoel de Barros Tavares & Lucas Gabriel Amorim Steffen</p>
+            <p class="text-gray-200 italic">Sistema não oficial ao SISDM, sem vínculo com a instituição</p>
+            <p class="text-blue-200">Versão 2.1.5</p>
+        </div>
     </footer>
+    
 
     <script src="./rain.js"></script>
     <script src="./validador.js"></script>

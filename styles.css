@@ -1,19 +1,18 @@
 body {
-    position: relative; /* Para posicionar as gotas de chuva */
-    min-height: 100vh; /* Garante que o body ocupe pelo menos toda a tela */
-    overflow: hidden; /* Esconde o scroll quando não necessário */
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
 }
 
 html {
-    overflow: auto; /* scroll apenas quando necessário */
+    overflow: auto;
 }
 
-/* Estilo para o rodapé */
 footer {
     text-align: center;
     padding: 20px;
-    background-color: #000; /* Cor de fundo do rodapé */
-    color: white; /* Cor do texto */
+    background-color: #000;
+    color: white;
     position: relative;
     bottom: 0;
     width: 100%;
@@ -42,11 +41,11 @@ footer {
 }
 
 .brilho {
-    animation: brilhoAnimado 1.5s infinite; /* Animação de brilho */
+    animation: brilhoAnimado 1.5s infinite;
 }
 
 .bg-black {
-    background-color: black; /* Fundo preto */
+    background-color: black;
 }
 
 .copy-icon {
@@ -57,16 +56,26 @@ footer {
 }
 
 .resultado-container {
-    position: relative; /* Para posicionar o ícone de copiar */
+    position: relative;
 }
 
-/* Efeito de chuva */
 .rain {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none; /* Permite que os cliques passem através da chuva */
-    z-index: -1; /* Coloca a chuva atrás de outros elementos */
+    pointer-events: none;
+    z-index: -1;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-thumb {
+    background: #3b82f6;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
 }
