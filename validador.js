@@ -38,9 +38,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         atividadesGabarito.forEach(atividade => {
-            if (!atividadesUsuario.some(atividadeUsuario => atividadeUsuario.toLowerCase() === atividade.nome.toLowerCase())) {
+            const nomesAtividadesUsuario = atividadesUsuario
+            .filter((_, i) => i % 2 === 0) 
+            .map(nome => nome.toLowerCase()); 
+        
+        atividadesGabarito.forEach(atividade => {
+            if (!nomesAtividadesUsuario.includes(atividade.nome.toLowerCase())) {
                 resultado.push(`❌ ${atividade.nome} não consta na lista de atividades informadas.`);
             }
+        });
+        
         });
 
         exibirResultado(capitulo, resultado);
