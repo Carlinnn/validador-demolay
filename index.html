@@ -30,6 +30,7 @@
             </div>
 
             <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 transition duration-200 text-white p-3 rounded-md font-semibold tracking-wide">Validar Atividades</button>
+            <button type="button" id="nova-consulta" class="w-full mt-3 bg-gray-700 hover:bg-gray-800 transition duration-200 text-white p-3 rounded-md font-semibold tracking-wide">Nova Consulta</button>
         </form>
 
         <div id="resultado" class="mt-8 p-6 bg-gray-800 bg-opacity-90 rounded-2xl shadow-lg hidden relative backdrop-blur-lg resultado-container max-h-96 overflow-y-auto">
@@ -52,5 +53,13 @@
 
     <script src="./rain.js"></script>
     <script src="./validador.js"></script>
+    <script>
+        document.getElementById('nova-consulta').addEventListener('click', function() {
+            document.getElementById('capitulo').value = '';
+            document.getElementById('atividade').value = '';
+            document.getElementById('resultado').classList.add('hidden');
+            document.getElementById('resultado-text').textContent = '';
+        });
+    </script>
 </body>
 </html>
