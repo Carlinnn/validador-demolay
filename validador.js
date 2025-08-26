@@ -73,10 +73,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (nome === "comissões permanentes") {
-                if (dataUsuario <= new Date('2025-08-30')) {
+                if (dataUsuario <= new Date('2025-08-31')) {
                     return `✔️ ${atividadeEncontrada.nome} (${dataAtividade}) está correta.`;
                 }
-                return `❌ ${atividadeEncontrada.nome} deve ser realizada até 30/08/2025.`;
+                return `❌ ${atividadeEncontrada.nome} deve ser realizada até 31/08/2025.`;
             }
 
             if (dataUsuario <= new Date('2025-12-20')) {

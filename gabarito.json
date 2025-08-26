@@ -1,11 +1,6 @@
 {
     "atividades": [
         {
-            "nome": "Calendário e Planejamento de Gestão",
-            "data": "31/08/2025",
-            "validacao":true
-        },
-        {
             "nome": "Comissões Permanentes",
             "data": "31/08/2025",
             "validacao":true
