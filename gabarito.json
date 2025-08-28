@@ -3,72 +3,86 @@
         {
             "nome": "Comissões Permanentes",
             "data": "31/08/2025",
-            "validacao":true
+            "validacao":true,
+            "mes_obrigatorio": ""
         },
         {
             "nome": "Dia dos Pais",
             "data": "31/08/2025",
-            "validacao":true
+            "validacao":true,
+            "mes_obrigatorio": ""
         },
         {
             "nome": "Dia do Patriota",
             "data": "31/09/2025",
-            "validacao":true
+            "validacao":true,
+            "mes_obrigatorio": "09"
         },
         {
             "nome": "Dia Educacional",
             "data": "31/10/2025",
-            "validacao":true
+            "validacao":true,
+            "mes_obrigatorio": "10"
         },
         {
             "nome": "Dia do Meu Governo",
             "data": "30/11/2025",
-            "validacao":true
+            "validacao":true,
+            "mes_obrigatorio": "11"
         },
         {
             "nome": "Dia em memória a Frank Sherman Land",
             "data": "30/11/2025",
-            "validacao":true
+            "validacao":true,
+            "mes_obrigatorio": "11"
         },
         {
             "nome": "Dia do Conforto",
             "data": "20/12/2025",
-            "validacao":true
+            "validacao":true,
+            "mes_obrigatorio": "12"
         },
         {
             "nome": "Trabalho Social",
             "data": "20/12/2025",
-            "validacao":true
+            "validacao":true,
+            "mes_obrigatorio": ""
         },
         {
             "nome": "Arrecadação de Fundos",
             "data": "20/12/2025",
-            "validacao":true
+            "validacao":true,
+            "mes_obrigatorio": ""
         },
         {
             "nome": "Entretenimento",
             "data": "20/12/2025",
-            "validacao":true
+            "validacao":true,
+            "mes_obrigatorio": ""
         },
         {
             "nome": "Trabalho em conjunto com Maçonaria",
             "data": "20/12/2025",
-            "validacao":true
+            "validacao":true,
+            "mes_obrigatorio": ""
         },
         {
             "nome": "Ano DeMolay",
             "data": "20/12/2025",
-            "validacao":true
+            "validacao":true,
+            "mes_obrigatorio": ""
         },
         {
             "nome": "Iniciação à Ordem DeMolay",
             "data": "20/12/2025",
-            "validacao": true
+            "validacao": true,
+            "mes_obrigatorio": ""
         },
         {
             "nome": "INICIAÇÃO AO GRAU DeMOLAY",
             "data": "20/12/2025",
-            "validacao": true
+            "validacao": true,
+            "mes_obrigatorio": ""
         }
     ]
 }
