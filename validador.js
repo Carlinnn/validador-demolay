@@ -93,6 +93,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (atividadeEncontrada.validacao) {
       const nome = atividadeEncontrada.nome.toLowerCase();
+      const dataGabaritoParts = atividadeEncontrada.data.split("/");
+      const dataGabarito = new Date(dataGabaritoParts[2], dataGabaritoParts[1] - 1, dataGabaritoParts[0]);
+
+      // Se a data for exatamente igual à do gabarito, está correta
+      if (dataUsuario.getTime() === dataGabarito.getTime()) {
+        if (erros.length === 0) {
+          return `✔️ ${atividadeEncontrada.nome} (${dataAtividade}) está correta.`;
+        }
+      }
 
       if (nome === "comissões permanentes") {
         if (dataUsuario > new Date("2025-08-31")) {
