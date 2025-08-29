@@ -94,9 +94,12 @@ document.addEventListener("DOMContentLoaded", function () {
     if (atividadeEncontrada.validacao) {
       const nome = atividadeEncontrada.nome.toLowerCase();
       const dataGabaritoParts = atividadeEncontrada.data.split("/");
-      const dataGabarito = new Date(dataGabaritoParts[2], dataGabaritoParts[1] - 1, dataGabaritoParts[0]);
+      const dataGabarito = new Date(
+        dataGabaritoParts[2],
+        dataGabaritoParts[1] - 1,
+        dataGabaritoParts[0]
+      );
 
-      // Se a data for exatamente igual à do gabarito, está correta
       if (dataUsuario.getTime() === dataGabarito.getTime()) {
         if (erros.length === 0) {
           return `✔️ ${atividadeEncontrada.nome} (${dataAtividade}) está correta.`;
@@ -157,7 +160,64 @@ document.addEventListener("DOMContentLoaded", function () {
     const resultadoTexto = resultadoText.textContent;
     navigator.clipboard
       .writeText(resultadoTexto)
-      .then(() => alert("Resultado copiado para a área de transferência!"))
-      .catch((err) => console.error("Erro ao copiar o texto: ", err));
+      .then(() => {
+        playNotificationSound();
+        showToast(
+          "Sucesso!",
+          "Resultado copiado para a área de transferência!"
+        );
+      })
+      .catch((err) => {
+        console.error("Erro ao copiar o texto: ", err);
+        showToast("Erro", "Não foi possível copiar o texto", "error");
+      });
+  }
+
+  function playNotificationSound() {
+    try {
+      const audio = new Audio("assets/notify.mp3");
+      audio.volume = 0.5;
+      audio.play().catch((err) => {
+        console.log("Não foi possível reproduzir o som:", err);
+      });
+    } catch (error) {
+      console.log("Erro ao carregar o som:", error);
+    }
+  }
+
+  function showToast(title, message, type = "success") {
+    const existingToast = document.querySelector(".toast-notification");
+    if (existingToast) {
+      existingToast.remove();
+    }
+
+    const toast = document.createElement("div");
+    toast.className = "toast-notification";
+
+    const icon = type === "success" ? "✓" : "⚠";
+
+    toast.innerHTML = `
+      <div class="toast-icon">${icon}</div>
+      <div class="toast-content">
+        <div class="toast-title">${title}</div>
+        <div class="toast-message">${message}</div>
+      </div>
+      <div class="toast-progress"></div>
+    `;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.add("show");
+    }, 10);
+
+    setTimeout(() => {
+      toast.classList.add("hide");
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.remove();
+        }
+      }, 300);
+    }, 5000);
   }
 });
