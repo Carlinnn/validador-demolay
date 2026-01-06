@@ -9,192 +9,220 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function handleFormSubmit(event) {
     event.preventDefault();
+
     const capitulo = document.getElementById("capitulo").value.trim();
-    const atividadesInput = document.getElementById("atividade").value;
+    const atividadesInput = document.getElementById("atividade").value.trim();
+
+    if (!capitulo || !atividadesInput) {
+      showToast("Erro", "Preencha o nome do capítulo e as atividades", "error");
+      return;
+    }
 
     fetch("gabarito.json")
       .then((response) => response.json())
-      .then((data) =>
-        processarAtividades(data.atividades, capitulo, atividadesInput)
-      )
-      .catch((error) => console.error("Erro ao carregar o gabarito:", error));
+      .then((data) => processarAtividades(data.atividades, capitulo, atividadesInput))
+      .catch(() => {
+        showToast("Erro", "Erro ao carregar gabarito", "error");
+      });
   }
 
   function processarAtividades(atividadesGabarito, capitulo, atividadesInput) {
-    const atividadesUsuario = atividadesInput
-      .split("\n")
-      .map((line) => line.trim());
+    const linhas = atividadesInput.split("\n").map(l => l.trim()).filter(Boolean);
 
-    const atividadesUsuarioObjs = [];
-    for (let i = 0; i < atividadesUsuario.length; i += 2) {
-      const nomeOriginal = atividadesUsuario[i];
-      const data = atividadesUsuario[i + 1];
-      if (nomeOriginal && data && isDataValida(data)) {
-        atividadesUsuarioObjs.push({
-          nomeOriginal,
-          nomeNormalizado: normalizarTexto(nomeOriginal),
-          data,
-        });
-      }
+    const atividadesUsuario = [];
+    for (let i = 0; i < linhas.length; i += 2) {
+      const nome = linhas[i];
+      const data = linhas[i + 1];
+
+      if (!nome || !data || !isDataValida(data)) continue;
+
+      atividadesUsuario.push({
+        nomeOriginal: nome,
+        nomeNormalizado: normalizarTexto(nome),
+        data
+      });
     }
 
-    let resultado = [];
+    const resultado = [];
+    const usadas = new Set();
 
-    atividadesUsuarioObjs.forEach(({ nomeOriginal, nomeNormalizado, data }) => {
-      const atividadeEncontrada = encontrarAtividade(
-        atividadesGabarito,
-        nomeNormalizado
-      );
-      if (atividadeEncontrada) {
-        resultado.push(
-          validarAtividade(atividadeEncontrada, nomeOriginal, data)
-        );
+    atividadesUsuario.forEach((usuario) => {
+      const match = encontrarMelhorMatch(atividadesGabarito, usuario.nomeNormalizado);
+
+      if (!match) {
+        resultado.push(`[ERRO] ${usuario.nomeOriginal}: atividade não existe no gabarito.`);
+        return;
       }
+
+      if (usadas.has(match.nome)) {
+        resultado.push(`[ERRO] ${match.nome}: atividade duplicada.`);
+        return;
+      }
+
+      usadas.add(match.nome);
+
+      const validacao = validarAtividade(match, usuario.data);
+      resultado.push(validacao);
     });
 
     atividadesGabarito.forEach((atividade) => {
-      const nomeGabaritoNormalizado = normalizarTexto(atividade.nome);
-      const encontrada = atividadesUsuarioObjs.some(
-        (obj) => obj.nomeNormalizado === nomeGabaritoNormalizado
-      );
-      if (!encontrada) {
-        resultado.push(
-          `❌ ${atividade.nome} não consta na lista de atividades informadas.`
-        );
+      if (!usadas.has(atividade.nome)) {
+        resultado.push(`[ERRO] ${atividade.nome}: não foi informada.`);
       }
     });
 
     exibirResultado(capitulo, resultado);
   }
 
-  function encontrarAtividade(atividades, nomeAtividade) {
-    return atividades.find(
-      (atividade) =>
-        normalizarTexto(nomeAtividade) === normalizarTexto(atividade.nome)
-    );
+  function encontrarMelhorMatch(atividades, nomeUsuario) {
+    let melhor = null;
+    let maiorScore = 0;
+
+    atividades.forEach((atividade) => {
+      const nomeGabarito = normalizarTexto(atividade.nome);
+      const score = similaridade(nomeUsuario, nomeGabarito);
+
+      if (score > maiorScore) {
+        maiorScore = score;
+        melhor = atividade;
+      }
+    });
+
+    return maiorScore >= 0.75 ? melhor : null;
   }
 
-  function validarAtividade(atividadeEncontrada, nomeAtividade, dataAtividade) {
-    const dataParts = dataAtividade.split("/");
-    const dataUsuario = new Date(dataParts[2], dataParts[1] - 1, dataParts[0]);
-    let erros = [];
+  function validarAtividade(atividade, dataUsuarioStr) {
+    const dataUsuario = parseData(dataUsuarioStr);
+    const dataGabarito = parseData(atividade.data);
 
-    if (
-      atividadeEncontrada.mes_obrigatorio &&
-      atividadeEncontrada.mes_obrigatorio !== ""
-    ) {
-      const mesUsuario = (dataParts[1] || "").padStart(2, "0");
-      if (mesUsuario !== atividadeEncontrada.mes_obrigatorio) {
-        erros.push(
-          `❌ ${atividadeEncontrada.nome}: Deve ser realizada no mês ${atividadeEncontrada.mes_obrigatorio}.`
-        );
+    const erros = [];
+
+    if (!dataUsuario || !dataGabarito) {
+      return `[ERRO] ${atividade.nome}: data inválida.`;
+    }
+
+    if (atividade.mes_obrigatorio) {
+      const mesUsuario = String(dataUsuario.getMonth() + 1).padStart(2, "0");
+      if (mesUsuario !== atividade.mes_obrigatorio) {
+        erros.push(`mês obrigatório ${atividade.mes_obrigatorio}`);
       }
     }
 
-    if (atividadeEncontrada.validacao) {
-      const nome = atividadeEncontrada.nome.toLowerCase();
-      const dataGabaritoParts = atividadeEncontrada.data.split("/");
-      const dataGabarito = new Date(
-        dataGabaritoParts[2],
-        dataGabaritoParts[1] - 1,
-        dataGabaritoParts[0]
-      );
-
-      if (dataUsuario.getTime() === dataGabarito.getTime()) {
-        if (erros.length === 0) {
-          return `✔️ ${atividadeEncontrada.nome} (${dataAtividade}) está correta.`;
+    if (atividade.validacao) {
+      if (atividade.nome.toLowerCase() === "comissões permanentes") {
+        const limite = new Date(2025, 7, 31);
+        if (dataUsuario > limite) {
+          erros.push("prazo máximo 31/08/2025");
         }
-      }
-
-      if (nome === "comissões permanentes") {
-        if (dataUsuario > new Date("2025-08-31")) {
-          erros.push(
-            `❌ ${atividadeEncontrada.nome}: Deve ser realizada até 31/08/2025.`
-          );
+      } else {
+        const limite = new Date(2025, 11, 20);
+        if (dataUsuario > limite) {
+          erros.push("prazo máximo 20/12/2025");
         }
-      } else if (dataUsuario > new Date("2025-12-20")) {
-        erros.push(
-          `❌ ${atividadeEncontrada.nome}: Deve ser realizada até 20/12/2025.`
-        );
       }
     }
 
     if (erros.length === 0) {
-      return `✔️ ${atividadeEncontrada.nome} (${dataAtividade}) está correta.`;
-    } else if (erros.length === 1) {
-      return erros[0];
-    } else {
-      return `❌ ${atividadeEncontrada.nome}: ${erros
-        .map((e) => e.replace(/^❌ [^:]+: /, ""))
-        .join(" e ")}`;
+      return `[OK] ${atividade.nome} (${dataUsuarioStr}) está correta.`;
     }
-  }
 
-  function isDataValida(dataAtividade) {
-    const dataParts = dataAtividade.split("/");
-    return dataParts.length === 3;
+    return `[ERRO] ${atividade.nome}: ${erros.join(" e ")}.`;
   }
 
   function normalizarTexto(texto) {
     return texto
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[\s\u00A0]+/g, " ")
-      .replace(/ +/g, " ")
+      .replace(/[^a-zA-Z0-9 ]/g, "")
+      .replace(/\s+/g, " ")
       .trim()
       .toLowerCase();
   }
 
+  function similaridade(a, b) {
+    if (a === b) return 1;
+    const distancia = levenshtein(a, b);
+    const max = Math.max(a.length, b.length);
+    return 1 - distancia / max;
+  }
+
+  function levenshtein(a, b) {
+    const matrix = [];
+
+    for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+    for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+
+    for (let i = 1; i <= b.length; i++) {
+      for (let j = 1; j <= a.length; j++) {
+        if (b.charAt(i - 1) === a.charAt(j - 1)) {
+          matrix[i][j] = matrix[i - 1][j - 1];
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j - 1] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j] + 1
+          );
+        }
+      }
+    }
+
+    return matrix[b.length][a.length];
+  }
+
+  function isDataValida(data) {
+    const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    if (!regex.test(data)) return false;
+
+    const [dia, mes, ano] = data.split("/").map(Number);
+    const date = new Date(ano, mes - 1, dia);
+
+    return date.getFullYear() === ano && date.getMonth() === mes - 1 && date.getDate() === dia;
+  }
+
+  function parseData(data) {
+    if (!isDataValida(data)) return null;
+    const [dia, mes, ano] = data.split("/").map(Number);
+    return new Date(ano, mes - 1, dia);
+  }
+
   function exibirResultado(capitulo, resultado) {
     const capituloNormalizado = normalizarTexto(capitulo);
-    const temPalavraCapitulo = /\bcapitulo\b/.test(capituloNormalizado);
-    const tituloFormatado = temPalavraCapitulo
-      ? capitulo
-      : `Capítulo: ${capitulo}`;
+    const temCapitulo = capituloNormalizado.includes("capitulo");
+    const titulo = temCapitulo ? capitulo : `Capítulo: ${capitulo}`;
 
-    resultadoText.textContent = `${tituloFormatado}\n\n${resultado.join("\n")}`;
+    resultadoText.textContent = `${titulo}\n\n${resultado.join("\n")}`;
     resultadoDiv.classList.remove("hidden");
   }
 
   function handleCopyButtonClick() {
-    const resultadoTexto = resultadoText.textContent;
-    navigator.clipboard
-      .writeText(resultadoTexto)
-      .then(() => {
-        playNotificationSound();
-        showToast(
-          "Sucesso!",
-          "Resultado copiado para a área de transferência!"
-        );
-      })
-      .catch((err) => {
-        console.error("Erro ao copiar o texto: ", err);
-        showToast("Erro", "Não foi possível copiar o texto", "error");
-      });
+    const texto = resultadoText.textContent;
+
+    navigator.clipboard.writeText(texto).then(() => {
+      playNotificationSound();
+      showToast("Sucesso", "Resultado copiado para a área de transferência");
+    }).catch(() => {
+      showToast("Erro", "Falha ao copiar", "error");
+    });
   }
 
   function playNotificationSound() {
     try {
       const audio = new Audio("assets/notify.mp3");
       audio.volume = 0.5;
-      audio.play().catch((err) => {
-        console.log("Não foi possível reproduzir o som:", err);
-      });
-    } catch (error) {
-      console.log("Erro ao carregar o som:", error);
-    }
+      audio.play().catch(() => {});
+    } catch {}
   }
 
   function showToast(title, message, type = "success") {
-    const existingToast = document.querySelector(".toast-notification");
-    if (existingToast) {
-      existingToast.remove();
-    }
+    const existing = document.querySelector(".toast-notification");
+    if (existing) existing.remove();
 
     const toast = document.createElement("div");
     toast.className = "toast-notification";
 
-    const icon = type === "success" ? "✓" : "⚠";
+    const icon = type === "success"
+      ? '<i class="ph ph-check-circle"></i>'
+      : '<i class="ph ph-warning-circle"></i>';
 
     toast.innerHTML = `
       <div class="toast-icon">${icon}</div>
@@ -207,17 +235,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.body.appendChild(toast);
 
-    setTimeout(() => {
-      toast.classList.add("show");
-    }, 10);
+    setTimeout(() => toast.classList.add("show"), 10);
 
     setTimeout(() => {
       toast.classList.add("hide");
-      setTimeout(() => {
-        if (toast.parentNode) {
-          toast.remove();
-        }
-      }, 300);
-    }, 5000);
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
   }
 });
