@@ -5,9 +5,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Validador de Atividades CNIE</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
         <script src="https://unpkg.com/@phosphor-icons/web"></script>
         <link rel="stylesheet" href="./styles.css">
+        <style>
+            body { font-family: 'Inter', sans-serif; }
+        </style>
     </head>
 
     <body class="bg-gradient-to-br from-black via-gray-900 to-black text-white min-h-screen flex flex-col">
@@ -73,18 +77,20 @@
                 </form>
 
                 <div id="resultado"
-                    class="hidden mt-10 bg-gray-900 border border-gray-800 rounded-2xl shadow-2xl p-6 relative max-h-96 overflow-y-auto">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-bold text-blue-300">
-                            Resultado da Validação
+                    class="hidden mt-10 bg-gray-900/50 backdrop-blur-xl border border-gray-800 rounded-3xl shadow-2xl p-6 sm:p-8 relative">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-black text-white tracking-tight flex items-center gap-2">
+                            <i class="ph ph-chart-bar text-blue-500"></i>
+                            Validação
                         </h2>
-                        <button id="copy-button" title="Copiar resultado"
-                            class="bg-gray-700 hover:bg-gray-600 transition px-3 py-2 rounded-lg text-sm font-semibold">
-                            Copiar
+                        <button id="copy-button" 
+                            class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white transition-all px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-blue-900/20 active:scale-95">
+                            <i class="ph ph-copy"></i>
+                            Copiar Texto
                         </button>
                     </div>
 
-                    <pre id="resultado-text" class="whitespace-pre-wrap text-sm text-gray-200 leading-relaxed"></pre>
+                    <div id="resultado-text" class="space-y-4"></div>
                 </div>
 
             </div>

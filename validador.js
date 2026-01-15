@@ -50,12 +50,20 @@ document.addEventListener("DOMContentLoaded", function () {
       const match = encontrarMelhorMatch(atividadesGabarito, usuario.nomeNormalizado);
 
       if (!match) {
-        resultado.push(`[ERRO] ${usuario.nomeOriginal}: atividade não existe no gabarito.`);
+        resultado.push({
+          status: "erro",
+          atividade: usuario.nomeOriginal,
+          mensagem: "atividade não existe no gabarito."
+        });
         return;
       }
 
       if (usadas.has(match.nome)) {
-        resultado.push(`[ERRO] ${match.nome}: atividade duplicada.`);
+        resultado.push({
+          status: "erro",
+          atividade: match.nome,
+          mensagem: "atividade duplicada."
+        });
         return;
       }
 
@@ -67,7 +75,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     atividadesGabarito.forEach((atividade) => {
       if (!usadas.has(atividade.nome)) {
-        resultado.push(`[ERRO] ${atividade.nome}: não foi informada.`);
+        resultado.push({
+          status: "erro",
+          atividade: atividade.nome,
+          mensagem: "não foi informada."
+        });
       }
     });
 
@@ -98,7 +110,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const erros = [];
 
     if (!dataUsuario || !dataGabarito) {
-      return `[ERRO] ${atividade.nome}: data inválida.`;
+      return {
+        status: "erro",
+        atividade: atividade.nome,
+        mensagem: "data inválida."
+      };
     }
 
     if (atividade.mes_obrigatorio) {
@@ -110,23 +126,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (atividade.validacao) {
       if (atividade.nome.toLowerCase() === "comissões permanentes") {
-        const limite = new Date(2025, 7, 31);
+        const limite = new Date(2026, 7, 31);
         if (dataUsuario > limite) {
-          erros.push("prazo máximo 31/08/2025");
+          erros.push("prazo máximo 31/08/2026");
         }
       } else {
-        const limite = new Date(2025, 11, 20);
+        const limite = new Date(2026, 11, 20);
         if (dataUsuario > limite) {
-          erros.push("prazo máximo 20/12/2025");
+          erros.push("prazo máximo 20/12/2026");
         }
       }
     }
 
     if (erros.length === 0) {
-      return `[OK] ${atividade.nome} (${dataUsuarioStr}) está correta.`;
+      return {
+        status: "ok",
+        atividade: atividade.nome,
+        data: dataUsuarioStr,
+        mensagem: "está correta."
+      };
     }
 
-    return `[ERRO] ${atividade.nome}: ${erros.join(" e ")}.`;
+    return {
+      status: "erro",
+      atividade: atividade.nome,
+      mensagem: erros.join(" e ") + "."
+    };
   }
 
   function normalizarTexto(texto) {
@@ -190,12 +215,100 @@ document.addEventListener("DOMContentLoaded", function () {
     const temCapitulo = capituloNormalizado.includes("capitulo");
     const titulo = temCapitulo ? capitulo : `Capítulo: ${capitulo}`;
 
-    resultadoText.textContent = `${titulo}\n\n${resultado.join("\n")}`;
+    // Texto para cópia
+    const textoCopia = [
+      titulo,
+      "",
+      ...resultado.map(r => {
+        if (r.status === "ok") {
+          return `[OK] ${r.atividade} (${r.data}) ${r.mensagem}`;
+        } else {
+          return `[ERRO] ${r.atividade}: ${r.mensagem}`;
+        }
+      })
+    ].join("\n");
+
+    resultadoText.setAttribute("data-raw", textoCopia);
+
+    // Renderização
+    resultadoText.innerHTML = "";
+
+    // Identificação
+    const capituloHeader = document.createElement("div");
+    capituloHeader.className = "mb-6 pb-4 border-b border-gray-800";
+    capituloHeader.innerHTML = `
+      <div class="flex items-center gap-2 text-gray-500 text-[10px] uppercase tracking-[0.2em] font-black">
+        <i class="ph ph-hash"></i> Identificação
+      </div>
+      <div class="text-2xl font-black text-white mt-1 tracking-tight">${titulo}</div>
+    `;
+    resultadoText.appendChild(capituloHeader);
+
+    // Resumo
+    const numOk = resultado.filter(r => r.status === "ok").length;
+    const numErro = resultado.length - numOk;
+
+    const resumo = document.createElement("div");
+    resumo.className = "grid grid-cols-2 gap-4 mb-8";
+    resumo.innerHTML = `
+      <div class="bg-green-500/5 border border-green-500/20 rounded-2xl p-5 text-center transition-all hover:bg-green-500/10 hover:border-green-500/40">
+        <div class="text-green-400 text-3xl font-black mb-1">${numOk}</div>
+        <div class="text-green-100/40 text-[10px] font-black uppercase tracking-widest">Atividades OK</div>
+      </div>
+      <div class="bg-red-500/5 border border-red-500/20 rounded-2xl p-5 text-center transition-all hover:bg-red-500/10 hover:border-red-500/40">
+        <div class="text-red-400 text-3xl font-black mb-1">${numErro}</div>
+        <div class="text-red-100/40 text-[10px] font-black uppercase tracking-widest">Pendentes</div>
+      </div>
+    `;
+    resultadoText.appendChild(resumo);
+
+    // Lista
+    const conteinerResultados = document.createElement("div");
+    conteinerResultados.className = "space-y-4";
+
+    resultado.forEach(r => {
+      const isOk = r.status === "ok";
+      const item = document.createElement("div");
+
+      item.className = `group flex items-start gap-4 p-5 rounded-2xl border transition-all duration-300 hover:scale-[1.02] shadow-sm ${isOk
+          ? "bg-green-500/5 border-green-500/10 hover:border-green-500/30 hover:shadow-green-500/5"
+          : "bg-red-500/5 border-red-500/10 hover:border-red-500/30 hover:shadow-red-500/5"
+        }`;
+
+      const icon = isOk ? "ph-check-circle" : "ph-warning-circle";
+      const color = isOk ? "green" : "red";
+
+      item.innerHTML = `
+        <div class="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center bg-${color}-500/10 transition-transform group-hover:scale-110">
+          <i class="ph ${icon} text-${color}-400 text-2xl"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1">
+            <h3 class="font-bold text-sm sm:text-lg truncate text-${color}-100">
+              ${r.atividade}
+            </h3>
+            <span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-${color}-500/20 text-${color}-400 uppercase tracking-wider">
+              ${isOk ? 'Validado' : 'Ajustar'}
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-gray-400/80 font-medium leading-relaxed">
+            ${isOk ? `<span class="text-${color}-300/60">Data: ${r.data}</span> • ` : ""}${r.mensagem}
+          </p>
+        </div>
+      `;
+      conteinerResultados.appendChild(item);
+    });
+
+    resultadoText.appendChild(conteinerResultados);
     resultadoDiv.classList.remove("hidden");
+
+    setTimeout(() => {
+      resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   }
 
   function handleCopyButtonClick() {
-    const texto = resultadoText.textContent;
+    const texto = resultadoText.getAttribute("data-raw") || resultadoText.innerText;
 
     navigator.clipboard.writeText(texto).then(() => {
       playNotificationSound();
@@ -209,8 +322,8 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
       const audio = new Audio("assets/notify.mp3");
       audio.volume = 0.5;
-      audio.play().catch(() => {});
-    } catch {}
+      audio.play().catch(() => { });
+    } catch { }
   }
 
   function showToast(title, message, type = "success") {
@@ -234,7 +347,6 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
 
     document.body.appendChild(toast);
-
     setTimeout(() => toast.classList.add("show"), 10);
 
     setTimeout(() => {

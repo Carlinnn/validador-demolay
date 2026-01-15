@@ -1,86 +1,86 @@
 {
     "atividades": [
         {
-            "nome": "Comissões Permanentes",
-            "data": "31/08/2025",
-            "validacao":true,
-            "mes_obrigatorio": ""
-        },
-        {
-            "nome": "Dia dos Pais",
-            "data": "31/08/2025",
-            "validacao":true,
-            "mes_obrigatorio": ""
-        },
-        {
-            "nome": "Dia do Patriota",
-            "data": "31/09/2025",
-            "validacao":true,
-            "mes_obrigatorio": "09"
-        },
-        {
-            "nome": "Dia Educacional",
-            "data": "31/10/2025",
-            "validacao":true,
-            "mes_obrigatorio": "10"
-        },
-        {
-            "nome": "Dia do Meu Governo",
-            "data": "30/11/2025",
-            "validacao":true,
-            "mes_obrigatorio": "11"
-        },
-        {
-            "nome": "Dia em memória a Frank Sherman Land",
-            "data": "30/11/2025",
-            "validacao":true,
-            "mes_obrigatorio": "11"
-        },
-        {
-            "nome": "Dia do Conforto",
-            "data": "20/12/2025",
-            "validacao":true,
-            "mes_obrigatorio": "12"
-        },
-        {
-            "nome": "Trabalho Social",
-            "data": "20/12/2025",
-            "validacao":true,
-            "mes_obrigatorio": ""
-        },
-        {
-            "nome": "Arrecadação de Fundos",
-            "data": "20/12/2025",
-            "validacao":true,
-            "mes_obrigatorio": ""
-        },
-        {
-            "nome": "Entretenimento",
-            "data": "20/12/2025",
-            "validacao":true,
-            "mes_obrigatorio": ""
-        },
-        {
-            "nome": "Trabalho em conjunto com Maçonaria",
-            "data": "20/12/2025",
-            "validacao":true,
-            "mes_obrigatorio": ""
-        },
-        {
-            "nome": "Ano DeMolay",
-            "data": "20/12/2025",
-            "validacao":true,
-            "mes_obrigatorio": ""
-        },
-        {
-            "nome": "Iniciação à Ordem DeMolay",
-            "data": "20/12/2025",
+            "nome": "Calendário e Planejamento de Gestão",
+            "data": "28/02/2026",
             "validacao": true,
             "mes_obrigatorio": ""
         },
         {
-            "nome": "Iniciação ao grau DeMolay",
-            "data": "20/12/2025",
+            "nome": "Comissões Permanentes",
+            "data": "28/02/2026",
+            "validacao": true,
+            "mes_obrigatorio": ""
+        },
+        {
+            "nome": "Dia em Memória a Jacques DeMolay",
+            "data": "31/03/2026",
+            "validacao": true,
+            "mes_obrigatorio": "03"
+        },
+        {
+            "nome": "Dia Devocional",
+            "data": "31/03/2026",
+            "validacao": true,
+            "mes_obrigatorio": "03"
+        },
+        {
+            "nome": "Dia das Mães",
+            "data": "31/05/2026",
+            "validacao": true,
+            "mes_obrigatorio": "05"
+        },
+        {
+            "nome": "Trabalho Social",
+            "data": "20/06/2026",
+            "validacao": true,
+            "mes_obrigatorio": ""
+        },
+        {
+            "nome": "Arrecadação de Fundos",
+            "data": "20/06/2026",
+            "validacao": true,
+            "mes_obrigatorio": ""
+        },
+        {
+            "nome": "Entretenimento",
+            "data": "20/06/2026",
+            "validacao": true,
+            "mes_obrigatorio": ""
+        },
+        {
+            "nome": "Trabalho em Conjunto com a Maçonaria",
+            "data": "20/06/2026",
+            "validacao": true,
+            "mes_obrigatorio": ""
+        },
+        {
+            "nome": "Ano DeMolay",
+            "data": "20/06/2026",
+            "validacao": true,
+            "mes_obrigatorio": ""
+        },
+        {
+            "nome": "Iniciação à Ordem DeMolay",
+            "data": "20/06/2026",
+            "validacao": true,
+            "mes_obrigatorio": ""
+        },
+        {
+            "nome": "Iniciação ao Grau DeMolay",
+            "data": "20/06/2026",
+            "validacao": true,
+            "mes_obrigatorio": ""
+        },
+        {
+            "nome": "Ritualística - Grau Iniciático",
+            "data": "20/06/2026",
+            "validacao": true,
+            "mes_obrigatorio": ""
+        },
+        {
+            "nome": "Ritualística - Grau DeMolay",
+            "data": "20/06/2026",
             "validacao": true,
             "mes_obrigatorio": ""
         }
