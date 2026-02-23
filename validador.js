@@ -49,7 +49,22 @@ document.addEventListener("DOMContentLoaded", function () {
     atividadesUsuario.forEach((usuario) => {
       const match = encontrarMelhorMatch(atividadesGabarito, usuario.nomeNormalizado);
 
+      const atividadesLivres = [
+        "eleicao",
+        "cerimonia publica"
+      ];
+
       if (!match) {
+        if (atividadesLivres.includes(usuario.nomeNormalizado)) {
+          resultado.push({
+            status: "ok",
+            atividade: usuario.nomeOriginal,
+            data: usuario.data,
+            mensagem: "atividade extra registrada."
+          });
+          return;
+        }
+
         resultado.push({
           status: "erro",
           atividade: usuario.nomeOriginal,
@@ -58,13 +73,24 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      if (usadas.has(match.nome)) {
-        resultado.push({
-          status: "erro",
-          atividade: match.nome,
-          mensagem: "atividade duplicada."
-        });
-        return;
+      const atividadesMultiplas = [
+        "ritualistica grau iniciatico",
+        "ritualistica grau demolay"
+      ];
+
+      const nomeNormalizadoMatch = normalizarTexto(match.nome);
+
+      if (!atividadesMultiplas.includes(nomeNormalizadoMatch)) {
+        if (usadas.has(match.nome)) {
+          resultado.push({
+            status: "erro",
+            atividade: match.nome,
+            mensagem: "atividade duplicada."
+          });
+          return;
+        }
+
+        usadas.add(match.nome);
       }
 
       usadas.add(match.nome);
@@ -271,8 +297,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const item = document.createElement("div");
 
       item.className = `group flex items-start gap-4 p-5 rounded-2xl border transition-all duration-300 hover:scale-[1.02] shadow-sm ${isOk
-          ? "bg-green-500/5 border-green-500/10 hover:border-green-500/30 hover:shadow-green-500/5"
-          : "bg-red-500/5 border-red-500/10 hover:border-red-500/30 hover:shadow-red-500/5"
+        ? "bg-green-500/5 border-green-500/10 hover:border-green-500/30 hover:shadow-green-500/5"
+        : "bg-red-500/5 border-red-500/10 hover:border-red-500/30 hover:shadow-red-500/5"
         }`;
 
       const icon = isOk ? "ph-check-circle" : "ph-warning-circle";

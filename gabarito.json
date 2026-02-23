@@ -1,12 +1,6 @@
 {
     "atividades": [
         {
-            "nome": "Calendário e Planejamento de Gestão",
-            "data": "28/02/2026",
-            "validacao": true,
-            "mes_obrigatorio": ""
-        },
-        {
             "nome": "Comissões Permanentes",
             "data": "28/02/2026",
             "validacao": true,
