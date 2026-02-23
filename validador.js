@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
             status: "ok",
             atividade: usuario.nomeOriginal,
             data: usuario.data,
-            mensagem: "atividade extra registrada."
+            mensagem: "atividade registrada."
           });
           return;
         }
